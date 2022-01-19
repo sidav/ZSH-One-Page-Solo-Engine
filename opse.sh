@@ -296,39 +296,53 @@ hexCrawler() {
   echo "Events: $()"
 }
 
-echo "= ORACLE ="
-echo " Yes/no: $(oracleYesNo)"
-echo " How: $(oracleHow)"
-echo " Action focus: $(oracleActionFocus)"
-echo " Detail focus: $(oracleDetailFocus)"
-echo " Topic focus: $(oracleTopicFocus)"
-echo
-
-echo "= GM ="
-echo " GM Pacing: $(gmPacing)"
-echo " GM Failure: $(gmFailure)"
-echo
-
-echo "= SCENE SETUP ="
-echo " $(sceneComplication)"
-if [[ $(shuf -n 1 -i 1-6) -gt 4 ]]
-then
-  echo " $(alteredScene)"
-else
-  echo " No altered scene"
-fi
-
-echo
-echo "-----------------"
-echo "=== GENERATORS =="
-plotHook
-echo
-npcGenerator
-echo
-randomEvent
-echo
-genericGenerator
-
-#echo "= CRAWLERS ="
-#dungeonCrawler
-#hexCrawler
+case $1 in
+  o)
+    echo "= ORACLE ="
+    echo " Yes/no: $(oracleYesNo)"
+    echo " How: $(oracleHow)"
+    echo " Action focus: $(oracleActionFocus)"
+    echo " Detail focus: $(oracleDetailFocus)"
+    echo " Topic focus: $(oracleTopicFocus)"
+    ;;
+  gm)
+    echo "= GM ="
+    echo " GM Pacing: $(gmPacing)"
+    echo " GM Failure: $(gmFailure)"
+    ;;
+  s)
+    echo "= SCENE SETUP ="
+    echo " $(sceneComplication)"
+    if [[ $(shuf -n 1 -i 1-6) -gt 4 ]]
+    then
+      echo " $(alteredScene)"
+    else
+      echo " No altered scene"
+    fi
+    ;;
+  plot)
+    plotHook
+    randomEvent
+    ;;
+  gen)
+    npcGenerator
+    genericGenerator
+    ;;
+  crawl)
+    echo "= CRAWLERS ="
+    echo "Not implemented"
+    #dungeonCrawler
+    #hexCrawler
+    ;;
+  *)
+    echo "  HELP: "
+    echo "USAGE: ./opse [type]"
+    echo "Types: "
+    echo "o - Oracle"
+    echo "gm - GM"
+    echo "s - Scene"
+    echo "plot - Plot Hook and random event"
+    echo "gen - Generators"
+    echo "crawl - Crawlers"
+    ;;
+esac
