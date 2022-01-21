@@ -177,6 +177,16 @@ alteredScene () {
   echo "Altered scene: $(selectValueFromArray ${as[@]})"
 }
 
+setTheScene() {
+  sceneComplication
+  if [[ $(shuf -n 1 -i 1-6) -gt 4 ]]
+  then
+    echo " $(alteredScene)"
+  else
+    echo " No altered scene"
+  fi
+}
+
 # COMPLEX GENERATORS
 
 plotHook () {
@@ -282,18 +292,77 @@ dungeonCrawler() {
   echo "Dungeon theme: "
   echo " How it looks: $(oracleDetailFocus)"
   echo " How it is used: $(oracleActionFocus)"
-  echo "Location: $()"
-  echo "Encounter: $()"
-  echo "Object: $()"
-  echo "Total exits: $()"
+  locations=(
+    "1 Typical area"
+    "2 Transitional area"
+    "3 Living area or meeting place"
+    "4 Working or utility area"
+    "5 Area with a special feature"
+    "6 Location for a specialized purpose"
+  )
+  echo "Location: $(selectValueFromArray ${locations[@]})"
+  encounters=(
+    "1 None"
+    "2 None"
+    "3 Hostile enemies"
+    "4 Hostile enemies"
+    "5 An obstacle blocks the way"
+    "6 Unique NPC or adversary"
+  )
+  echo "Encounter: $(selectValueFromArray ${encounters[@]})"
+  objects=(
+    "1-2 Nothing, or mundane objects"
+    "3 An interesting item or clue"
+    "4 A useful tool, key, or device"
+    "5 Something valuable"
+    "6 Rare or special item"
+  )
+  echo "Object: $(selectValueFromArray ${objects[@]})"
+  exits=(
+    "1 Dead end"
+    "2 Dead end"
+    "3 One additional exit"
+    "4 One additional exit"
+    "5 Two additional exits"
+    "6 Two additional exits"
+  )
+  echo "Total exits: $(selectValueFromArray ${exits[@]})"
 }
 
 hexCrawler() {
   echo "=== HEX CRAWLER ==="
-  echo "Terrain: $()"
-  echo "Contents: $()"
-  echo "Features: $()"
-  echo "Events: $()"
+  arr=(
+    "1 Same as current hex"
+    "2 Same as current hex"
+    "3 Common terrain"
+    "4 Common terrain"
+    "5 Uncommon terrain"
+    "6 Rare terrain"
+  )
+  echo "Terrain: $(selectValueFromArray ${arr[@]})"
+  if [[ $(shuf -n 1 -i 1-6) -gt 5 ]]
+  then
+    arr=(
+      "1 Notable structure"
+      "2 Dangerous hazard"
+      "3 A settlement"
+      "4 Strange natural feature"
+      "5 New region (set new terrain types)"
+      "6 DUNGEON CRAWLER entrance"
+    )
+    echo "Features: $(selectValueFromArray ${arr[@]})"
+  else
+    echo "No feature"
+  fi
+
+  if [[ $(shuf -n 1 -i 1-6) -gt 4 ]]
+  then
+    echo "Random event!"
+    randomEvent
+    setTheScene
+  else
+    echo "No random event"
+  fi
 }
 
 start() {
@@ -304,21 +373,20 @@ start() {
 }
 
 showOpseHelp() {
-  echo "1	Create one or more characters using your chosen game system."
-  echo "2	Roll a starting PLOT HOOK and a RANDOM EVENT, then SET THE SCENE."
-  echo "3	Start asking the ORACLE questions.  Interpret the answers in context."
-  echo "4	Play the game to overcome the challenges of the scene."
-  echo "5	Use GM MOVES to move the action."
-  echo "6	SET THE SCENE for the next thing you want your character to do."
+  echo "1 Create one or more characters using your chosen game system."
+  echo "2 Roll a starting PLOT HOOK and a RANDOM EVENT, then SET THE SCENE."
+  echo "3 Start asking the ORACLE questions.  Interpret the answers in context."
+  echo "4 Play the game to overcome the challenges of the scene."
+  echo "5 Use GM MOVES to move the action."
+  echo "6 SET THE SCENE for the next thing you want your character to do."
 }
 
 showHelp() {
   echo "What do you will?"
-  echo "[Start]"
-  echo "[O]racle, [GM], [S]cene"
-  echo "[P]lot Hook and random event"
+  echo "[Start] - Plot hook, event and scene"
+  echo "[O]racle, [GM], [S]cene, [R]andom event"
   echo "Generators: [N]PC or [G]eneric"
-  echo "[C]rawlers"
+  echo "Crawlers - [DC]ungeon or [HC]ex"
 }
 
 showHelp
@@ -354,8 +422,7 @@ do
         echo " No altered scene"
       fi
       ;;
-    p)
-      plotHook
+    r)
       randomEvent
       ;;
     n)
@@ -364,11 +431,11 @@ do
     g)
       genericGenerator
       ;;
-    c)
-      echo "= CRAWLERS ="
-      echo "Not implemented"
-      #dungeonCrawler
-      #hexCrawler
+    dc)
+      dungeonCrawler
+      ;;
+    hc)
+      hexCrawler
       ;;
     opse)
 
