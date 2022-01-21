@@ -296,53 +296,94 @@ hexCrawler() {
   echo "Events: $()"
 }
 
-case $1 in
-  o)
-    echo "= ORACLE ="
-    echo " Yes/no: $(oracleYesNo)"
-    echo " How: $(oracleHow)"
-    echo " Action focus: $(oracleActionFocus)"
-    echo " Detail focus: $(oracleDetailFocus)"
-    echo " Topic focus: $(oracleTopicFocus)"
-    ;;
-  gm)
-    echo "= GM ="
-    echo " GM Pacing: $(gmPacing)"
-    echo " GM Failure: $(gmFailure)"
-    ;;
-  s)
-    echo "= SCENE SETUP ="
-    echo " $(sceneComplication)"
-    if [[ $(shuf -n 1 -i 1-6) -gt 4 ]]
-    then
-      echo " $(alteredScene)"
-    else
-      echo " No altered scene"
-    fi
-    ;;
-  plot)
-    plotHook
-    randomEvent
-    ;;
-  gen)
-    npcGenerator
-    genericGenerator
-    ;;
-  crawl)
-    echo "= CRAWLERS ="
-    echo "Not implemented"
-    #dungeonCrawler
-    #hexCrawler
-    ;;
-  *)
-    echo "  HELP: "
-    echo "USAGE: ./opse [type]"
-    echo "Types: "
-    echo "o - Oracle"
-    echo "gm - GM"
-    echo "s - Scene"
-    echo "plot - Plot Hook and random event"
-    echo "gen - Generators"
-    echo "crawl - Crawlers"
-    ;;
-esac
+start() {
+  plotHook
+  randomEvent
+  echo "=== SCENE COMPLICATION ==="
+  sceneComplication
+}
+
+showOpseHelp() {
+  echo "1	Create one or more characters using your chosen game system."
+  echo "2	Roll a starting PLOT HOOK and a RANDOM EVENT, then SET THE SCENE."
+  echo "3	Start asking the ORACLE questions.  Interpret the answers in context."
+  echo "4	Play the game to overcome the challenges of the scene."
+  echo "5	Use GM MOVES to move the action."
+  echo "6	SET THE SCENE for the next thing you want your character to do."
+}
+
+showHelp() {
+  echo "What do you will?"
+  echo "[Start]"
+  echo "[O]racle, [GM], [S]cene"
+  echo "[P]lot Hook and random event"
+  echo "Generators: [N]PC or [G]eneric"
+  echo "[C]rawlers"
+}
+
+showHelp
+
+for (( ; ; ))
+do
+  echo -n "> "
+  read -r input
+  case $input in
+    start)
+      start
+      ;;
+    o)
+      echo "= ORACLE ="
+      echo " Yes/no: $(oracleYesNo)"
+      echo " How: $(oracleHow)"
+      echo " Action focus: $(oracleActionFocus)"
+      echo " Detail focus: $(oracleDetailFocus)"
+      echo " Topic focus: $(oracleTopicFocus)"
+      ;;
+    gm)
+      echo "= GM ="
+      echo " GM Pacing: $(gmPacing)"
+      echo " GM Failure: $(gmFailure)"
+      ;;
+    s)
+      echo "= SCENE SETUP ="
+      echo " $(sceneComplication)"
+      if [[ $(shuf -n 1 -i 1-6) -gt 4 ]]
+      then
+        echo " $(alteredScene)"
+      else
+        echo " No altered scene"
+      fi
+      ;;
+    p)
+      plotHook
+      randomEvent
+      ;;
+    n)
+      npcGenerator
+      ;;
+    g)
+      genericGenerator
+      ;;
+    c)
+      echo "= CRAWLERS ="
+      echo "Not implemented"
+      #dungeonCrawler
+      #hexCrawler
+      ;;
+    opse)
+
+      ;;
+    clr)
+      tput reset
+      ;;
+    help)
+      showHelp
+      ;;
+    exit)
+      break
+      ;;
+    *)
+      echo " UNRECOGNIZED: $input. Maybe type 'help' or 'opse'? "
+      ;;
+  esac
+done
